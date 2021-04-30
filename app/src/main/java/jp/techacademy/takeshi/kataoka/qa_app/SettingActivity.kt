@@ -1,6 +1,5 @@
 package jp.techacademy.takeshi.kataoka.qa_app
 
-import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.inputmethod.InputMethodManager
@@ -31,7 +30,7 @@ class SettingActivity : AppCompatActivity() {
 
         changeButton.setOnClickListener { v ->
             // キーボードが出ていたら閉じる
-            val im = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            val im = getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
             im.hideSoftInputFromWindow(v.windowToken, InputMethodManager.HIDE_NOT_ALWAYS)
 
             // ログイン済みのユーザーを取得する

@@ -134,8 +134,9 @@ class MainActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
         drawer_layout.addDrawerListener(toggle)
         toggle.syncState()
 
-        val navigationView = findViewById<NavigationView>(R.id.nav_view)
-        navigationView.setNavigationItemSelectedListener(this)
+        // val navigationView = findViewById<NavigationView>(R.id.nav_view)
+        // navigationView.setNavigationItemSelectedListener(this)
+        nav_view.setNavigationItemSelectedListener(this)
 
         // Firebase
         mDatabaseReference = FirebaseDatabase.getInstance().reference

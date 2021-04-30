@@ -28,7 +28,7 @@ class QuestionDetailActivity : AppCompatActivity() {
 
             val body = map["body"] as? String ?: ""
             val name = map["name"] as? String ?: ""
-            val uid = map["uid"] as? String ?:""
+            val uid = map["uid"] as? String ?: ""
 
             val answer = Answer(body, name, uid, answerUid)
             mQuestion.answers.add(answer)

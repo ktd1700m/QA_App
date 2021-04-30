@@ -10,7 +10,6 @@ import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.list_question_detail.view.*
-import org.w3c.dom.Text
 
 class QuestionDetailListAdapter(context: Context, private val mQuestion: Question) : BaseAdapter() {
     companion object {

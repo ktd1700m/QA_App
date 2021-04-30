@@ -26,7 +26,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import java.io.ByteArrayOutputStream
-import java.lang.Exception
 
 class QuestionSendActivity : AppCompatActivity(), View.OnClickListener, DatabaseReference.CompletionListener {
     companion object {
@@ -95,7 +94,7 @@ class QuestionSendActivity : AppCompatActivity(), View.OnClickListener, Database
         }
     }
 
-    override fun onClick(v: View?) {
+    override fun onClick(v: View) {
         if (v === imageView) {
             // パーミッションの許可状態を確認する
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -197,7 +196,7 @@ class QuestionSendActivity : AppCompatActivity(), View.OnClickListener, Database
             .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values)
 
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        cameraIntent.putExtra(MediaStore.ACTION_IMAGE_CAPTURE, mPictureUri)
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mPictureUri)
 
         // ギャラリー選択のIntentを与えてcreateChooserメソッドを呼ぶ
         val chooserIntent = Intent.createChooser(galleryIntent, getString(R.string.get_image))

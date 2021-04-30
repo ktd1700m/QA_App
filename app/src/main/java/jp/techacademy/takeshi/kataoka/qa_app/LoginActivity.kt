@@ -56,7 +56,7 @@ class LoginActivity : AppCompatActivity() {
                 val userRef = mDataBaseReference.child(UsersPATH).child(user!!.uid)
 
                 if (mIsCreateAccount) {
-                    // アカウント作成の時は表示名をFirebaseにする
+                    // アカウント作成の時は表示名をFirebaseに保存する
                     val name = nameText.text.toString()
 
                     val data = HashMap<String, String>()
@@ -73,7 +73,7 @@ class LoginActivity : AppCompatActivity() {
                             saveName(data!!["name"] as String)
                         }
 
-                        override fun onCancelled(error: DatabaseError) {}
+                        override fun onCancelled(firebaseError: DatabaseError) {}
                     })
                 }
 
@@ -144,7 +144,7 @@ class LoginActivity : AppCompatActivity() {
         mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(mCreateAccountListener)
     }
 
-    private fun login(email: String, password:String) {
+    private fun login(email: String, password: String) {
         // プログレスバーを表示する
         progressBar.visibility = View.VISIBLE
 
