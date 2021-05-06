@@ -100,10 +100,10 @@ class QuestionDetailActivity : AppCompatActivity() {
         listView.adapter = mAdapter
         mAdapter.notifyDataSetChanged()
 
-        fab.setOnClickListener {
-            // ログイン済みのユーザーを取得する
-            val user = FirebaseAuth.getInstance().currentUser
+        // ログイン済みのユーザーを取得する
+        val user = FirebaseAuth.getInstance().currentUser
 
+        fab.setOnClickListener {
             if (user == null) {
                 // ログインしていなければログイン画面に遷移させる
                 val intent = Intent(applicationContext, LoginActivity::class.java)
@@ -124,22 +124,33 @@ class QuestionDetailActivity : AppCompatActivity() {
 
 /////////// 以下、課題提出用の追加コード ///////////
 
+        if (user == null) {
+
+        } else {
+            val databaseReference = FirebaseDatabase.getInstance().reference
+            mFavoriteRef = databaseReference.child(UsersPATH).child(user!!.uid).child(FavoritesPATH)
+            isFavorite = false
+            mFavoriteRef.addChildEventListener(favoriteEventListener)
+        }
+
         fab_favorite.setOnClickListener {
 
             // ToDo: お気に入り済みなら削除・してないなら登録
-            mFavoriteRef = databaseReference.child(UsersPATH).
-            child(FirebaseAuth.getInstance().currentUser!!.uid)
+            mFavoriteRef = databaseReference.child(UsersPATH)
+                .child(FirebaseAuth.getInstance().currentUser!!.uid)
                 .child(FavoritesPATH)
 
             if (isFavorite) {
               // 削除
                 mFavoriteRef.removeValue()
+                fab_favorite.setImageResource(R.drawable.ic_star_border)
                 isFavorite = false
             } else {
                 //val rootUid = dataSnapshot.key ?: ""
                 //val data = HashMap<String, String>()
                 //data["questionUid"] = mQuestion.questionUid
                 mFavoriteRef.push().setValue(mQuestion.questionUid)
+                fab_favorite.setImageResource(R.drawable.ic_star)
 
             }
 
@@ -167,11 +178,10 @@ class QuestionDetailActivity : AppCompatActivity() {
             //for (favorite in userPath.child(user!!.uid).child(FavoritesPATH))
             //val data = userPath.child(user!!.uid).child(FavoritesPATH)
 
-            val databaseReference = FirebaseDatabase.getInstance().reference
-            mFavoriteRef = databaseReference.child(UsersPATH).child(user!!.uid).child(FavoritesPATH)
+//            mFavoriteRef = databaseReference.child(UsersPATH).child(user.uid).child(FavoritesPATH)
 
-            isFavorite = false
-            mFavoriteRef.addChildEventListener(favoriteEventListener)
+//            isFavorite = false
+//            mFavoriteRef.addChildEventListener(favoriteEventListener)
 
 
             /*

@@ -197,6 +197,9 @@ class MainActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
         } else if (id == R.id.nav_computer) {
             toolbar.title = getString(R.string.menu_computer_label)
             mGenre = 4
+        } else if (id == R.id.nav_favorite) {
+            toolbar.title = getString(R.string.menu_favorite_label)
+            mGenre = 5
         }
 
         drawer_layout.closeDrawer(GravityCompat.START)
