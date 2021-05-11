@@ -3,6 +3,7 @@ package jp.techacademy.takeshi.kataoka.qa_app
 import android.content.Intent
 import android.os.Bundle
 import android.util.Base64
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -146,7 +147,16 @@ class MainActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
         mQuestionArrayList = ArrayList<Question>()
         mAdapter.notifyDataSetChanged()
 
+
+        Log.d("QA_testLog MOnCre", mQuestionArrayList.size.toString())
+
+
         listView.setOnItemClickListener { parent, view, position, id ->
+
+
+            Log.d("QA_testLog ItemClick", mQuestionArrayList.size.toString())
+
+
             // Questionのインスタンスを渡して質問詳細画面を起動する
             val intent = Intent(applicationContext, QuestionDetailActivity::class.java)
             intent.putExtra("question", mQuestionArrayList[position])
@@ -158,10 +168,19 @@ class MainActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
         super.onResume()
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
 
+        navigationView.menu.getItem(4).isVisible = FirebaseAuth.getInstance().currentUser != null
+
         // 1:趣味を規定の選択とする
         if (mGenre == 0) {
             onNavigationItemSelected(navigationView.menu.getItem(0))
         }
+
+
+
+        Log.d("QA_testLog MOnRes", mQuestionArrayList.size.toString())
+
+
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -215,6 +234,12 @@ class MainActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
         }
         mGenreRef = mDatabaseReference.child(ContentsPATH).child(mGenre.toString())
         mGenreRef!!.addChildEventListener(mEventListener)
+
+
+
+        Log.d("QA_testLog MainNav", mQuestionArrayList.size.toString())
+
+
 
         return true
     }

@@ -3,6 +3,7 @@ package jp.techacademy.takeshi.kataoka.qa_app
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Base64
 import android.util.Log
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
@@ -16,32 +17,34 @@ class QuestionDetailActivity : AppCompatActivity() {
     private lateinit var mAdapter: QuestionDetailListAdapter
     private lateinit var mAnswerRef: DatabaseReference
 
+//    private lateinit var mQuestionArrayList: ArrayList<Question>
+//    private lateinit var mFavoriteAdapter: QuestionsListAdapter
     private lateinit var mFavoriteRef: DatabaseReference
 
     private var isFavorite = false
 
     private val favoriteEventListener = object : ChildEventListener {
         override fun onCancelled(error: DatabaseError) {
-            TODO("Not yet implemented")
+
         }
 
         override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {
-            TODO("Not yet implemented")
+
         }
 
         override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-            TODO("Not yet implemented")
+
         }
 
-        override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-            TODO("Not yet implemented")
+        override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
             // flgをTRUEに
-            isFavorite = true
-
+//            isFavorite = true
+            val uid = mQuestion.uid
+            FavoriteList.add(uid)
         }
 
         override fun onChildRemoved(snapshot: DataSnapshot) {
-            TODO("Not yet implemented")
+
         }
 
     }
@@ -124,6 +127,7 @@ class QuestionDetailActivity : AppCompatActivity() {
 
 /////////// 以下、課題提出用の追加コード ///////////
 
+        /*
         if (user == null) {
 
         } else {
@@ -132,13 +136,13 @@ class QuestionDetailActivity : AppCompatActivity() {
             isFavorite = false
             mFavoriteRef.addChildEventListener(favoriteEventListener)
         }
+        */
 
         fab_favorite.setOnClickListener {
 
-            // ToDo: お気に入り済みなら削除・してないなら登録
-            mFavoriteRef = databaseReference.child(UsersPATH)
-                .child(FirebaseAuth.getInstance().currentUser!!.uid)
-                .child(FavoritesPATH)
+            // お気に入り済みなら削除・してないなら登録
+            mFavoriteRef = databaseReference.child(FavoritesPATH).child(user!!.uid)
+            isFavorite = FavoriteList.contains(mQuestion.uid)
 
             if (isFavorite) {
               // 削除
@@ -147,11 +151,11 @@ class QuestionDetailActivity : AppCompatActivity() {
                 isFavorite = false
             } else {
                 //val rootUid = dataSnapshot.key ?: ""
-                //val data = HashMap<String, String>()
-                //data["questionUid"] = mQuestion.questionUid
-                mFavoriteRef.push().setValue(mQuestion.questionUid)
+                val data = HashMap<String, String>()
+                data[mQuestion.questionUid] = mQuestion.title
+                mFavoriteRef.setValue(data)
                 fab_favorite.setImageResource(R.drawable.ic_star)
-
+                isFavorite = true
             }
 
 
@@ -163,7 +167,6 @@ class QuestionDetailActivity : AppCompatActivity() {
 
         val user = FirebaseAuth.getInstance().currentUser
         val databaseReference = FirebaseDatabase.getInstance().reference
-        val userPath = databaseReference.child(UsersPATH)
 
         //mFavoriteRef = databaseReference.child(UsersPATH).child("DFETC0B1PKcMaUpCbtmnX7eLMH13")
         //mFavoriteRef = databaseReference.child(UsersPATH)
@@ -178,10 +181,27 @@ class QuestionDetailActivity : AppCompatActivity() {
             //for (favorite in userPath.child(user!!.uid).child(FavoritesPATH))
             //val data = userPath.child(user!!.uid).child(FavoritesPATH)
 
-//            mFavoriteRef = databaseReference.child(UsersPATH).child(user.uid).child(FavoritesPATH)
+//            mFavoriteAdapter = QuestionsListAdapter(this)
+//            mQuestionArrayList = ArrayList<Question>()
+//            mFavoriteAdapter.notifyDataSetChanged()
 
-//            isFavorite = false
-//            mFavoriteRef.addChildEventListener(favoriteEventListener)
+
+            FavoriteList.clear()
+            mFavoriteRef = databaseReference.child(FavoritesPATH).child(user.uid)
+            mFavoriteRef.addChildEventListener(favoriteEventListener)
+
+            Log.d("QA_testLog", "uid = " + mQuestion.uid)
+            Log.d("QA_testLog", "Quid = " + mQuestion.questionUid)
+            Log.d("QA_testLog", "T/F = " + FavoriteList.contains(mQuestion.questionUid))
+            Log.d("QA_testLog", "FList = $FavoriteList")
+
+            if (FavoriteList.contains(mQuestion.questionUid)) {
+                fab_favorite.setImageResource(R.drawable.ic_star)
+            } else {
+                fab_favorite.setImageResource(R.drawable.ic_star_border)
+            }
+
+
 
 
             /*
