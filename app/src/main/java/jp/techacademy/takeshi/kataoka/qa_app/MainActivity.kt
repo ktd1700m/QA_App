@@ -147,16 +147,7 @@ class MainActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
         mQuestionArrayList = ArrayList<Question>()
         mAdapter.notifyDataSetChanged()
 
-
-        Log.d("QA_testLog MOnCre", mQuestionArrayList.size.toString())
-
-
         listView.setOnItemClickListener { parent, view, position, id ->
-
-
-            Log.d("QA_testLog ItemClick", mQuestionArrayList.size.toString())
-
-
             // Questionのインスタンスを渡して質問詳細画面を起動する
             val intent = Intent(applicationContext, QuestionDetailActivity::class.java)
             intent.putExtra("question", mQuestionArrayList[position])
@@ -174,12 +165,6 @@ class MainActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
         if (mGenre == 0) {
             onNavigationItemSelected(navigationView.menu.getItem(0))
         }
-
-
-
-        Log.d("QA_testLog MOnRes", mQuestionArrayList.size.toString())
-
-
 
     }
 
@@ -234,12 +219,6 @@ class MainActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
         }
         mGenreRef = mDatabaseReference.child(ContentsPATH).child(mGenre.toString())
         mGenreRef!!.addChildEventListener(mEventListener)
-
-
-
-        Log.d("QA_testLog MainNav", mQuestionArrayList.size.toString())
-
-
 
         return true
     }
