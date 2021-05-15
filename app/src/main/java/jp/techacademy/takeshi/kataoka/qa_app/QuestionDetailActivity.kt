@@ -37,9 +37,6 @@ class QuestionDetailActivity : AppCompatActivity() {
         }
 
         override fun onChildAdded(dataSnapshot: DataSnapshot, previousChildName: String?) {
-            Log.d("QA_testLog", "snapKey = " + dataSnapshot.key.toString())
-            Log.d("QA_testLog", "snapVal = " + dataSnapshot.value.toString())
-
             FavoriteList.add(dataSnapshot.key.toString())
 
             isFavorite = if (FavoriteList.contains(mQuestion.questionUid)) {
@@ -49,10 +46,6 @@ class QuestionDetailActivity : AppCompatActivity() {
                 fab_favorite.setImageResource(R.drawable.ic_star_border)
                 false
             }
-
-            Log.d("QA_testLog", "T/F 0 = " + FavoriteList.contains(mQuestion.questionUid))
-            Log.d("QA_testLog", "onChildAdded FList = $FavoriteList")
-
         }
 
         override fun onChildRemoved(snapshot: DataSnapshot) {
@@ -139,41 +132,22 @@ class QuestionDetailActivity : AppCompatActivity() {
 
 /////////// 以下、課題提出用の追加コード ///////////
 
-        /*
-        if (user == null) {
-
-        } else {
-            val databaseReference = FirebaseDatabase.getInstance().reference
-            mFavoriteRef = databaseReference.child(UsersPATH).child(user!!.uid).child(FavoritesPATH)
-            isFavorite = false
-            mFavoriteRef.addChildEventListener(favoriteEventListener)
-        }
-        */
-
         fab_favorite.setOnClickListener {
-
             // お気に入り済みなら削除・してないなら登録
-            //mFavoriteRef = databaseReference.child(FavoritesPATH).child(user!!.uid)
-            //isFavorite = FavoriteList.contains(mQuestion.questionUid)
-            Log.d("QA_testLog", "fabClick FList = $FavoriteList")
-            Log.d("QA_testLog", "isFavorite = $isFavorite")
-            Log.d("QA_testLog", "T/F 1 = " + FavoriteList.contains(mQuestion.questionUid))
-
             if (isFavorite) {
-              // 削除
+                // 削除
                 mFavoriteRef.child(mQuestion.questionUid).removeValue()
                 fab_favorite.setImageResource(R.drawable.ic_star_border)
                 isFavorite = false
             } else {
-                //val rootUid = dataSnapshot.key ?: ""
+                // 登録
                 val data = HashMap<String, String>()
-                data[mQuestion.questionUid] = mQuestion.title
-                mFavoriteRef.setValue(data)
+                data["genre"] = mQuestion.genre.toString()
+                data["title"] = mQuestion.title
+                mFavoriteRef.child(mQuestion.questionUid).setValue(data)
                 fab_favorite.setImageResource(R.drawable.ic_star)
                 isFavorite = true
             }
-
-
         }
     }
 
@@ -184,61 +158,15 @@ class QuestionDetailActivity : AppCompatActivity() {
         val user = FirebaseAuth.getInstance().currentUser
         val databaseReference = FirebaseDatabase.getInstance().reference
 
-        //mFavoriteRef = databaseReference.child(UsersPATH).child("DFETC0B1PKcMaUpCbtmnX7eLMH13")
-        //mFavoriteRef = databaseReference.child(UsersPATH)
-        //mFavoriteRef.child(FavoritesPATH).push().setValue("aaa1")
-        //mFavoriteRef.child(FavoritesPATH).push().setValue("bbb2")
-
         if (user == null) {
             fab_favorite.visibility = View.INVISIBLE
         } else {
             fab_favorite.visibility = View.VISIBLE
 
-            //for (favorite in userPath.child(user!!.uid).child(FavoritesPATH))
-            //val data = userPath.child(user!!.uid).child(FavoritesPATH)
-
-//            mFavoriteAdapter = QuestionsListAdapter(this)
-//            mQuestionArrayList = ArrayList<Question>()
-//            mFavoriteAdapter.notifyDataSetChanged()
-
-
             FavoriteList.clear()
             mFavoriteRef = databaseReference.child(FavoritesPATH).child(user.uid)
             mFavoriteRef.addChildEventListener(favoriteEventListener)
 
-            //Log.d("QA_testLog", "uid = " + mQuestion.uid)
-            //Log.d("QA_testLog", "Quid = " + mQuestion.questionUid)
-            //Log.d("QA_testLog", "T/F 1 = " + FavoriteList.contains(mQuestion.questionUid))
-
-            //Log.d("QA_testLog", "onResume")
-            /*
-            if (FavoriteList.contains(mQuestion.questionUid)) {
-                fab_favorite.setImageResource(R.drawable.ic_star)
-            } else {
-                fab_favorite.setImageResource(R.drawable.ic_star_border)
-            }
-            */
-
-            //Log.d("QA_testLog", "T/F 2 = " + FavoriteList.contains(mQuestion.questionUid))
-
-
-
-            /*
-            Log.d("QA_testLog", "currentUser = $user ; " + mQuestion.uid )
-
-            mFavoriteRef.get().addOnSuccessListener {
-                Log.i("QA_testLog", "Got Value ${it.value}")
-            }.addOnFailureListener {
-                Log.e("QA_testLog", "Error getting data", it)
-            }
-            */
         }
     }
-
-    /*
-    override fun onPause() {
-        super.onPause()
-        isFavorite = false
-    }
-     */
 }
