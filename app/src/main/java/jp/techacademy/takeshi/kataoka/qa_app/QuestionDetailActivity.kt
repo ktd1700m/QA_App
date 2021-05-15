@@ -17,8 +17,6 @@ class QuestionDetailActivity : AppCompatActivity() {
     private lateinit var mAdapter: QuestionDetailListAdapter
     private lateinit var mAnswerRef: DatabaseReference
 
-//    private lateinit var mQuestionArrayList: ArrayList<Question>
-//    private lateinit var mFavoriteAdapter: QuestionsListAdapter
     private lateinit var mFavoriteRef: DatabaseReference
 
     private var isFavorite = false
@@ -129,8 +127,6 @@ class QuestionDetailActivity : AppCompatActivity() {
         mAnswerRef = databaseReference.child(ContentsPATH).child(mQuestion.genre.toString()).child(mQuestion.questionUid)
             .child(AnswersPATH)
         mAnswerRef.addChildEventListener(mEventListener)
-
-/////////// 以下、課題提出用の追加コード ///////////
 
         fab_favorite.setOnClickListener {
             // お気に入り済みなら削除・してないなら登録

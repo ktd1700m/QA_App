@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
             mFavoriteAdapter.notifyDataSetChanged()
         }
 
-        override fun onChildRemoved(snapshot: DataSnapshot) {
+        override fun onChildRemoved(dataSnapshot: DataSnapshot) {
 
         }
 
@@ -192,13 +192,8 @@ class MainActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
             val intent = Intent(applicationContext, QuestionDetailActivity::class.java)
 
             if (mGenre == 5) {
-                //val title = mDatabaseReference.child(ContentsPATH).child(mFavoriteArrayList[position].genre.toString()).child(mFavoriteArrayList[position].questionUid).child("title")
-                //Log.d("QA_testLog", title.toString())
                 var favoriteQuestion : Question? = null
-                //favoriteQuestion!!.questionUid = mFavoriteArrayList[position].questionUid
-                //favoriteQuestion.genre = mFavoriteArrayList[position].genre
                 mDatabaseReference.child(ContentsPATH).child(mFavoriteArrayList[position].genre.toString()).child(mFavoriteArrayList[position].questionUid).get().addOnSuccessListener {
-                    //Log.d("QA_testLog", it.value.toString())
                     val map = it.value as Map<String, String>
                     val title = map["title"] ?: ""
                     val body = map["body"] ?: ""
@@ -225,20 +220,18 @@ class MainActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
                     }
                     favoriteQuestion = Question(title, body, name, uid, mFavoriteArrayList[position].questionUid,
                         mFavoriteArrayList[position].genre, bytes, answerArrayList)
-                    Log.d("QA_test01", favoriteQuestion.toString())
-                    Log.d("QA_test02", title)
-                    //intent.putExtra("question", favoriteQuestion)
+
+                    intent.putExtra("question", favoriteQuestion)
+                    startActivity(intent)
+
                 }.addOnFailureListener {
-                    Log.d("QA_test03", "fail!!!")
                 }
-                intent.putExtra("question", favoriteQuestion)
-                Log.d("QA_test11", favoriteQuestion.toString())
 
             } else {
                 intent.putExtra("question", mQuestionArrayList[position])
-                Log.d("QA_test22", mQuestionArrayList[position].toString())
+                startActivity(intent)
             }
-//            startActivity(intent)
+            //startActivity(intent)
         }
     }
 
@@ -247,13 +240,16 @@ class MainActivity : AppCompatActivity() , NavigationView.OnNavigationItemSelect
         val navigationView = findViewById<NavigationView>(R.id.nav_view)
 
         // ログインしていない場合は「お気に入り」を表示しない
-        navigationView.menu.getItem(4).isVisible = FirebaseAuth.getInstance().currentUser != null
+        val user = FirebaseAuth.getInstance().currentUser
+        navigationView.menu.getItem(4).isVisible = user != null
 
         // 1:趣味を規定の選択とする
         if (mGenre == 0) {
             onNavigationItemSelected(navigationView.menu.getItem(0))
+        } else if (mGenre == 5) {
+            mFavoriteArrayList.clear()
+            onNavigationItemSelected(navigationView.menu.getItem( if (user == null) 0 else 4))
         }
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
